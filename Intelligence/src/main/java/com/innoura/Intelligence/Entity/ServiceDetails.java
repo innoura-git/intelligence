@@ -1,15 +1,17 @@
 package com.innoura.Intelligence.Entity;
 
-import jakarta.persistence.Entity;
+/**import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+
+*/
 public class ServiceDetails
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    ///@Id
+    ///@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String url;
     private String userName;
@@ -78,3 +80,4 @@ public class ServiceDetails
         this.serviceName = serviceName;
     }
 }
+
