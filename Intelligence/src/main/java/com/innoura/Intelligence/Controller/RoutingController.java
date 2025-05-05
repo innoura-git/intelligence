@@ -1,13 +1,18 @@
 package com.innoura.Intelligence.Controller;
 
+import com.innoura.Intelligence.Entity.ProjectDetails;
+import com.innoura.Intelligence.Entity.ServiceDetails;
 import com.innoura.Intelligence.Service.IntelligenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/innoura")
@@ -23,9 +28,21 @@ public class RoutingController
     }
 
     @GetMapping("/checkService")
-    public ResponseEntity<String> check(@RequestHeader("X-user") String user){
-        String services = intelligenceService.checkUserService(user);
+    public ResponseEntity<List<ServiceDetails>> check(@RequestHeader("X-user") String user){
+       List<ServiceDetails> services = intelligenceService.checkUserService(user);
         return ResponseEntity.ok(services);
     }
+
+    @PostMapping("/addProjects")
+    public ResponseEntity<String> saveProjects (@RequestBody ProjectDetails projectDetails){
+        intelligenceService.saveProjectDetails(projectDetails);
+        return ResponseEntity.ok("Project Details saved");
+    }
+
+    @GetMapping("/getProjectDetails")
+    public ResponseEntity<String> getProjectDetails(@RequestHeader("X-project")String project){
+        return ResponseEntity.ok(intelligenceService.getProjectDetails(project));
+    }
+
 
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+
 public class ServiceDetails
 {
     @Id
@@ -78,3 +79,4 @@ public class ServiceDetails
         this.serviceName = serviceName;
     }
 }
+

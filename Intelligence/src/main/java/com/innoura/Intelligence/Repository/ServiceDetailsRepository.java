@@ -1,5 +1,6 @@
 package com.innoura.Intelligence.Repository;
 
+
 import com.innoura.Intelligence.Entity.ServiceDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,3 +10,4 @@ public interface ServiceDetailsRepository extends JpaRepository<ServiceDetails,L
 {
     List<ServiceDetails> findByUserName(String userName);
 }
+
