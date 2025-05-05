@@ -1,29 +1,38 @@
 package com.innoura.Intelligence.Service;
 
-import com.innoura.Intelligence.Entity.ServiceDetails;
-import com.innoura.Intelligence.Repository.ServiceDetailsRepository;
+import com.innoura.Intelligence.Entity.ProjectInformation;
+import com.innoura.Intelligence.Repository.ProjectInformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class IntelligenceService
 {
 
     @Autowired
-    private ServiceDetailsRepository serviceDetailsRepository;
+    private ProjectInformationRepository projectInformationRepository;
 
-    public void saveServiceDetails(String url, String userName, String serviceName){
-        ServiceDetails serviceDetails = new ServiceDetails();
-        serviceDetails.setUrl(url);
-        serviceDetails.setUserName(userName);
-        serviceDetails.setServiceName(serviceName);
-        serviceDetailsRepository.save(serviceDetails);
+    public String checkProjectService(String projectName) {
+        return projectInformationRepository.findByProjectName(projectName);
     }
-
-    public String checkUserService(String userName){
-        List<ServiceDetails> userServices = serviceDetailsRepository.findByUserName(userName);
-        return userServices.toString();
+    public ResponseEntity<String> createNewProject(ProjectInformation projectInformation)
+    {
+        try {
+            projectInformationRepository.save(projectInformation);
+            return new ResponseEntity<>("Project created successfully!", HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>(
+                    "Duplicate project name. Please use a unique project name.",
+                    HttpStatus.CONFLICT
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Failed to create project: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
