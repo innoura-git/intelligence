@@ -20,19 +20,17 @@ public class CacheController {
         this.jedis = new Jedis("redis", 6379); // "redis" is the Kubernetes service name
     }
 
-    @PostMapping("/set")
-    public ResponseEntity<String> set(@RequestBody Map<String, String> body) {
+    @PostMapping("/set/{key}")
+    public ResponseEntity<String> set(@PathVariable String requestId, @RequestBody Map<String, String> body) {
         log.info("Received headers {}",body);
-        String key = body.get("key");
-        String value = body.get("value");
-        jedis.set(key, value);
+        jedis.hset(requestId, body);
         return ResponseEntity.ok("Set OK");
     }
 
     @GetMapping("/get/{key}")
-    public ResponseEntity<String> get(@PathVariable String key) {
-        log.info("get key {}",key);
-        String value = jedis.get(key);
+    public ResponseEntity<Map<String,String>> get(@PathVariable String requestId) {
+        log.info("get key {}",requestId);
+        Map<String,String> value = jedis.hgetAll(requestId);
         if (value == null) {
             return ResponseEntity.notFound().build();
         }
@@ -40,13 +38,13 @@ public class CacheController {
     }
 
     @DeleteMapping("/delete/{key}")
-    public ResponseEntity<String> delete(@PathVariable String key) {
-        log.info("deleted key {}",key);
-        Long result = jedis.del(key);
+    public ResponseEntity<String> delete(@PathVariable String requestId) {
+        log.info("deleted key {}",requestId);
+        Long result = jedis.del(requestId);
         if (result == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Key not found");
         }
-        return ResponseEntity.ok("Deleted key: " + key);
+        return ResponseEntity.ok("Deleted key: " + requestId);
     }
 
 }
