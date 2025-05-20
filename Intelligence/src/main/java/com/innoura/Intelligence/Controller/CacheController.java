@@ -46,5 +46,12 @@ public class CacheController {
         }
         return ResponseEntity.ok("Deleted key: " + requestId);
     }
+    @DeleteMapping("/flush")
+    public ResponseEntity<String> flush()
+    {
+        jedis.flushDB();
+        return ResponseEntity.ok("Database Cleared Successfully.");
+    }
+
 
 }
